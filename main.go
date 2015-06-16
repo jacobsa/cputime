@@ -57,7 +57,9 @@ func main() {
 	cmd.Stdout = os.Stdout
 	cmd.Stderr = os.Stderr
 
+	start := time.Now()
 	err := cmd.Run()
+	duration := time.Since(start)
 	if err != nil {
 		log.Fatalf("Run: %v", err)
 		return
@@ -71,9 +73,11 @@ func main() {
 	fmt.Fprintf(
 		os.Stderr,
 		"\n"+
+			"Wall time: %v\n"+
 			"User  CPU: %v\n"+
 			"Sys   CPU: %v\n"+
 			"Total CPU: %v\n",
+		duration,
 		user,
 		sys,
 		user+sys)
