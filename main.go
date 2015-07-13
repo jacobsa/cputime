@@ -28,6 +28,25 @@ import (
 	"time"
 )
 
+func formatBytes(count int64) string {
+	switch {
+	case count < 1<<10:
+		return fmt.Sprintf("%d bytes", count)
+
+	case count < 1<<20:
+		return fmt.Sprintf("%.2f KiB", float64(count)/(1<<10))
+
+	case count < 1<<30:
+		return fmt.Sprintf("%.2f MiB", float64(count)/(1<<20))
+
+	default:
+		fallthrough
+
+	case count < 1<<40:
+		return fmt.Sprintf("%.2f GiB", float64(count)/(1<<30))
+	}
+}
+
 func main() {
 	// Set up flags.
 	flag.Usage = func() {
@@ -73,10 +92,13 @@ func main() {
 	fmt.Fprintf(
 		os.Stderr,
 		"\n"+
+			"Max RSS:   %v\n"+
 			"Wall time: %v\n"+
+			"\n"+
 			"User  CPU: %v\n"+
 			"Sys   CPU: %v\n"+
 			"Total CPU: %v\n",
+		formatBytes(rusage.Maxrss*1024),
 		duration,
 		user,
 		sys,
