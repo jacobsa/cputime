@@ -92,6 +92,7 @@ func main() {
 	fmt.Fprintf(
 		os.Stderr,
 		"\n"+
+			"----------\n"+
 			"Max RSS:   %v\n"+
 			"Wall time: %v\n"+
 			"\n"+
