@@ -24,6 +24,7 @@ import (
 	"log"
 	"os"
 	"os/exec"
+	"runtime"
 	"syscall"
 	"time"
 )
@@ -89,6 +90,12 @@ func main() {
 	user := time.Duration(rusage.Utime.Nano()) * time.Nanosecond
 	sys := time.Duration(rusage.Stime.Nano()) * time.Nanosecond
 
+	maxRSS := rusage.Maxrss
+	if runtime.GOOS == "linux" {
+		// Linux uses KiB for this.
+		maxRSS *= 1024
+	}
+
 	fmt.Fprintf(
 		os.Stderr,
 		"\n"+
@@ -99,7 +106,7 @@ func main() {
 			"User  CPU: %v\n"+
 			"Sys   CPU: %v\n"+
 			"Total CPU: %v\n",
-		formatBytes(rusage.Maxrss*1024),
+		formatBytes(maxRSS),
 		duration,
 		user,
 		sys,
